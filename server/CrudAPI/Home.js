@@ -2,7 +2,7 @@ const express= require('express');
 const bodyParser = require('body-parser');
 const connectToDatabase = require('../DatabaseConfig/database');
 require('dotenv').config();
-const createActiviseModel = require('../models/ActiviseSchema');
+const createHomeModel = require('../models/HomeSchema');
 const multer = require('multer');
 const cookiePerser =require('cookie-parser');
 const router = express.Router();
@@ -10,14 +10,14 @@ const path = require("path");
 router.use(cookiePerser());
 
 //Connecting to database.. "NewsCollection"....
-const ActiviseCollection = connectToDatabase('ActiviseCollection',process.env.MONGODB_URI_NEWSDB);
-const ActiviseModel= createActiviseModel(ActiviseCollection);
+const HomeCollection = connectToDatabase('HomeCollection',process.env.MONGODB_URI_NEWSDB);
+const HomeModel= createHomeModel(HomeCollection);
 //middleware .......
 express().use(bodyParser.json());
 
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '..//../uploads/activitiseImage/');
+const uploadDir = path.resolve(__dirname, '..//../uploads/Home-Image/');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -48,52 +48,44 @@ function checkFileType(file, cb) {
   }
 }
 
-router.use('/uploads/activitiseImage', express.static(uploadDir));
-
+router.use('/uploads/homeImage', express.static(uploadDir));
 
 // creating a collection in mongodb and store data,,,,,,,,
 
-router.post('/activitise', upload.single('image'), (req, res) => {
-    const newActivise = new ActiviseModel({
-      title: req.body.title,
-      image: req.file ? req.file.path : '',
-      author: req.body.author,
-      description: req.body.description
+router.post('/home', upload.single('image'), (req, res) => {
+    const newHome = new HomeModel({
+    description: req.body.description,
+    image: req.file ? req.file.path : ''
     });
-    console.log(newActivise.title);
-    newActivise.save()
-      .then(newActivise => res.json({mesaage:"Post Save successfully",newActivise})
+    newHome.save()
+      .then(newHome => res.json({mesaage:"Post Save successfully",newHome})
     )
       .catch(err => res.status(400).json({ error: err.message }));
-  })
+  });
 
-//get All data from mongodb collection "NewsCollection",,,,
+  //get All data from mongodb collection "NewsCollection",,,,
 
-router.get('/activitise', (req, res) => {
-    ActiviseModel.find()
-      .then(activises => res.json(activises))
+router.get('/home', (req, res) => {
+    HomeModel.find()
+      .then(allHome => res.json(allHome))
       .catch(err => res.status(400).json({ error: err.message }));
   });
 
-
- // get specific data by Id.......
- router.get('/activitise/:id', (req, res) => {
-  const _id=req.params.id;
-    ActiviseModel.findById(_id)
-      .then(post => res.json(post))
-      .catch(err => res.status(400).json({message:"id not valid", error: err.message }));
-  });
-
-
- // Updating the news over its id....
- router.put('/activitise/:id', upload.single('image'), (req, res) => {
-    ActiviseModel.findById(req.params.id)
-      .then(post => {
-        post.title = req.body.title || post.title;
-        post.image = req.file ? req.file.path : post.image;
-        post.author = req.body.author || post.author;
-        post.description = req.body.description || post.description;
+   // get specific data by Id.......
+ router.get('/home/:id', (req, res) => {
+    const _id=req.params.id;
+      HomeModel.findById(_id)
+        .then(post => res.json(post))
+        .catch(err => res.status(400).json({message:"id not valid", error: err.message }));
+    });
   
+    
+ // Updating the news over its id....
+ router.put('/home/:id', upload.single('image'), (req, res) => {
+    HomeModel.findById(req.params.id)
+      .then(post => {
+        post.description = req.body.description || post.description;
+        post.image = req.file ? req.file.path : post.image;
         post.save()
           .then(updatedPost => res.json({message:"Data Update Successfully",updatedPost}))
           .catch(err => res.status(400).json({ error: err.message }));
@@ -103,13 +95,11 @@ router.get('/activitise', (req, res) => {
 
     // deleting news over its id.......
 
-    router.delete('/activitise/:id', (req, res) => {
-        ActiviseModel.findByIdAndDelete(req.params.id)
-          .then(() => res.json({ success: true }))
+    router.delete('/home/:id', (req, res) => {
+        HomeModel.findByIdAndDelete(req.params.id)
+          .then(() => res.json({message:"Deleted sucessfully", success: true }))
           .catch(err => res.status(400).json({ error: err.message }));
       });
 
 
       module.exports= router;
-
-

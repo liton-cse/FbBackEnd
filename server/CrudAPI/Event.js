@@ -67,7 +67,8 @@ router.post('/events', upload.single('image'), (req, res) => {
 
   //Get Event by Id....
   router.get('/events/:id', (req, res) => {
-    Event.findById(req.params.id)
+    const {id}=req.params.id;
+    Event.findById(id)
       .then(event => res.json(event))
       .catch(err => res.status(400).json({ error: err.message }));
   });

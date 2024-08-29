@@ -10,7 +10,7 @@ const cookiePerser =require('cookie-parser');
 router.use(cookiePerser());
 
 //Database connection and User model.......
-const db1 = connectToDatabase('db1', process.env.MONGODB_URI);
+const db1 = connectToDatabase('admin', process.env.MONGODB_URI);
 const User = createUserModel(db1);
 
 router.post('/login',async (req, res) => {

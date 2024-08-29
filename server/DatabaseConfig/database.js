@@ -11,7 +11,7 @@ try{
     const connection = mongoose.createConnection(uri); 
     console.log("Connection successful ");
     connections[dbName] = connection;
-    console.log(uri);
+    console.log(uri+"/"+dbName);
     return connection;   
  }catch(err){
     console.log(`Error:${err.message}`)
