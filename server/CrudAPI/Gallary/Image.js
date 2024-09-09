@@ -41,13 +41,14 @@ function checkFileType(file, cb) {
   }
 
 // Set up a POST route to handle image uploads
-router.post('/images', upload.array('images', 100), async (req, res) => {
+router.post('/images', upload.array('images', 10), async (req, res) => {
     const { district, subDistrict } = req.body;
 
     if (!district || !subDistrict) {
         return res.status(400).send('District and Sub-District names are required');
     }
-    const directoryFolder = path.resolve(__dirname,'../../../upload_image');
+    const folderDir= '../../uploadsGallary/images';
+    const directoryFolder = path.join(__dirname, folderDir);
     try {
         // Convert district and subDistrict to lowercase before storing
         const lowerDistrict = district.toLowerCase();
@@ -59,6 +60,7 @@ router.post('/images', upload.array('images', 100), async (req, res) => {
                 district: lowerDistrict,
                 subDistrict: lowerSubDistrict,
                 imageName: file.originalname,
+                imageUpd:`${Date.now()}-${file.originalname}`,
                 imagePath: `${directoryFolder}/${lowerDistrict}/${lowerSubDistrict}/${Date.now()}-${file.originalname}`,
             });
 
@@ -79,6 +81,7 @@ router.post('/images', upload.array('images', 100), async (req, res) => {
     } catch (error) {
         res.status(500).send('Error uploading images');
     }
+    
 });
 
 router.get('/images',async(req,res)=>{
@@ -87,6 +90,71 @@ router.get('/images',async(req,res)=>{
         res.status(200).json(posts);
     }catch(err){
         res.status(500).json({error:"Failed to load data"});
+    }
+});
+
+/*router.put('/images/:id', upload.array('images',10), async (req, res) => {
+    const { id } = req.params;
+    const { district, subDistrict } = req.body;
+
+    if (!district || !subDistrict) {
+        return res.status(400).send('District and Sub-District names are required');
+    }
+
+    try {
+        const image = await ImageModel.findById(id);
+        if (!image) {
+            return res.status(404).send('Image not found');
+        }
+
+        // Update the district and subDistrict fields
+        image.district = district.toLowerCase();
+        image.subDistrict = subDistrict.toLowerCase();
+
+        // If a new image file is uploaded, update it
+        if (req.file) {
+            const folderDir = '../../uploadsGallary/images';
+            const directoryFolder = path.join(__dirname, folderDir);
+
+            const dir = `${directoryFolder}/${image.district}/${image.subDistrict}`;
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+
+            const newImagePath = `${dir}/${Date.now()}-${req.file.originalname}`;
+            fs.writeFileSync(newImagePath, req.file.buffer);
+
+            // Delete the old image file
+            fs.unlinkSync(image.imagePath);
+
+            // Update the image path and name in the database
+            image.imageName = req.file.originalname;
+            image.imageUpd = `${Date.now()}-${req.file.originalname}`;
+            image.imagePath = newImagePath;
+        }
+
+        await image.save();
+
+        res.status(200).json({ message: 'Image updated successfully', image });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update image' });
+    }
+});*/
+
+
+router.delete('/images/:id',async(req,res)=>{
+    const id= req.params.id;
+    try{
+        const image=await ImageModel.findByIdAndDelete(id);
+        if (image) {
+            fs.unlinkSync(image.imagePath); 
+            res.status(200).json({ message: 'Image deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Image not found' });
+        }
+
+    }catch(error){
+        res.status(500).json({error:"Failed to delete data"});
     }
 });
 

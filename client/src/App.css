@@ -4,12 +4,14 @@
     
    
 }
+
 .hover-menu-item{
     height:40px;
     text-align: center;
 }
 body{
     background-color: rgb(231, 231, 239);
+    font-family: monospace, monospace;
 }
 /*Home page csss body content*/
 

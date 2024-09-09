@@ -16,7 +16,7 @@ const RainTreeModel= createRainTreeModel(RainTree);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '../../../uploads/Rain-Tree');
+const uploadDir = path.join(__dirname, '../../uploads/malign-tree/rain-tree');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -55,7 +55,7 @@ router.post('/rain-tree', upload.single('image'), (req, res) => {
     const RainTreePost = new RainTreeModel({
       title: req.body.title,
       description:req.body.description,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename: '',
     });
     
     RainTreePost.save()
@@ -87,7 +87,7 @@ router.get('/rain-tree', (req, res) => {
       .then(rainTreeData => {
         rainTreeData.title = req.body.title || rainTreeData.title;
         rainTreeData.description= req.body.description || rainTreeData.description;
-        rainTreeData.image = req.file ? req.file.path : rainTreeData.image;
+        rainTreeData.image = req.file ? req.file.filename : rainTreeData.image;
         rainTreeData.save()
           .then(updatedData => res.json({message:"Data Update Successfully",updatedData}))
           .catch(err => res.status(400).json({ error: err.message }));

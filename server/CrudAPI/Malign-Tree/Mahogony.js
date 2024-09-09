@@ -16,7 +16,7 @@ const MahogonyModel= createMahogonyModel(Mahogony);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '../../../uploads/mahogony');
+const uploadDir = path.join(__dirname, '../../uploads/malign-tree/mahogony/');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -47,15 +47,13 @@ function checkFileType(file, cb) {
     }
   }
 
-  router.use('/upload/mahogony', express.static(uploadDir));
-
   // creating a collection in mongodb and store data,,,,,,,,
 
 router.post('/mahogony', upload.single('image'), (req, res) => {
     const mahogonyPost = new MahogonyModel({
       title: req.body.title,
       description:req.body.description,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename : '',
     });
     
     mahogonyPost.save()
@@ -87,7 +85,7 @@ router.get('/mahogony', (req, res) => {
       .then(mahogonyData => {
         mahogonyData.title = req.body.title || mahogonyData.title;
         mahogonyData.description= req.body.description || mahogonyData.description;
-        mahogonyData.image = req.file ? req.file.path : mahogonyData.image;
+        mahogonyData.image = req.file ? req.file.filename : mahogonyData.image;
         mahogonyData.save()
           .then(updatedData => res.json({message:"Data Update Successfully",updatedData}))
           .catch(err => res.status(400).json({ error: err.message }));

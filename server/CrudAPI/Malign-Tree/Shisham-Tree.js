@@ -16,7 +16,7 @@ const ShishamTreeModel= createShishamTreeModel(ShishamTree);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '../../../uploads/Shisham-Tree');
+const uploadDir = path.resolve(__dirname, '../../uploads/malign-tree/shisham-tree');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -55,7 +55,7 @@ router.post('/shisham-tree', upload.single('image'), (req, res) => {
     const ShishamTreePost = new ShishamTreeModel({
       title: req.body.title,
       description:req.body.description,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename : '',
     });
     
     ShishamTreePost.save()
@@ -87,7 +87,7 @@ router.get('/shisham-tree', (req, res) => {
       .then(shishamTreeData => {
         shishamTreeData.title = req.body.title || shishamTreeData.title;
         shishamTreeData.description= req.body.description || shishamTreeData.description;
-        shishamTreeData.image = req.file ? req.file.path : shishamTreeData.image;
+        shishamTreeData.image = req.file ? req.file.filename : shishamTreeData.image;
         shishamTreeData.save()
           .then(updatedData => res.json({message:"Data Update Successfully",updatedData}))
           .catch(err => res.status(400).json({ error: err.message }));

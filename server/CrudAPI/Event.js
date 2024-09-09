@@ -16,7 +16,7 @@ const Event= createEventModel(EventCollection);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '../../uploads/eventImage/');
+const uploadDir = path.resolve(__dirname, '../uploads/event-image/');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -46,7 +46,7 @@ function checkFileType(file, cb) {
       cb('Error: Images Only!');
   }
 }
-router.use('/uploads/eventImage', express.static(uploadDir));
+//router.use('/uploads/eventImage', express.static(uploadDir));
 //Upload Event in eventsCollections Database......
 router.post('/events', upload.single('image'), (req, res) => {
     const { name,description,location ,date } = req.body;
@@ -81,7 +81,7 @@ router.post('/events', upload.single('image'), (req, res) => {
         event.description = req.body.description || event.description;
         event.location = req.body.location || event.location;
         event.date=req.body.date || event.date;
-        event.image = req.file ? req.file.path : event.image;
+        event.image = req.file ? req.file.filename : event.image;
         event.save()
           .then(updatedEvent => res.json({message:"Data Update Successfully",updatedEvent}))
           .catch(err => res.status(400).json({ error: err.message }));

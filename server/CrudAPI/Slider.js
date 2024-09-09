@@ -16,7 +16,7 @@ const SlideModel= createSliderModel(SlideCollection);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '..//../uploads/Slider-Image/');
+const uploadDir = path.join(__dirname, '../uploads/slider-image');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -47,7 +47,7 @@ function checkFileType(file, cb) {
     }
   }
 
-  router.use('/uploads/Slider-Image', express.static(uploadDir));
+  
 
   // creating a collection in mongodb and store data,,,,,,,,
 
@@ -55,7 +55,7 @@ router.post('/slider', upload.single('image'), (req, res) => {
     const newSlide = new SlideModel({
       title: req.body.title,
       subTitle:req.body.subTitle,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename : '',
     });
     console.log(newSlide.title);
     newSlide.save()
@@ -87,7 +87,7 @@ router.get('/slider', (req, res) => {
       .then(slide => {
         slide.title = req.body.title || slide.title;
         slide.subTitle = req.body.subTitle || slide.subTitle;
-        slide.image = req.file ? req.file.path : slide.image;
+        slide.image = req.file ? req.file.filename: slide.image;
         slide.save()
           .then(updatedSlide => res.json({message:"Data Update Successfully",updatedSlide}))
           .catch(err => res.status(400).json({ error: err.message }));

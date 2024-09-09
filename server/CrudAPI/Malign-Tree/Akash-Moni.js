@@ -16,7 +16,7 @@ const AkashMoniModel= createAkashMoniModel(AkashMoni);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '../../../uploads/Akash-Moni');
+const uploadDir = path.join(__dirname, '../../uploads/malign-tree/akash-moni');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -47,7 +47,7 @@ function checkFileType(file, cb) {
     }
   }
 
-  router.use('/upload/shisham-tree', express.static(uploadDir));
+  //router.use('/upload/shisham-tree', express.static(uploadDir));
 
   // creating a collection in mongodb and store data,,,,,,,,
 
@@ -55,7 +55,7 @@ router.post('/akash-moni', upload.single('image'), (req, res) => {
     const AkashMoniPost = new AkashMoniModel({
       title: req.body.title,
       description:req.body.description,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename: '',
     });
     
     AkashMoniPost.save()
@@ -87,7 +87,7 @@ router.get('/akash-moni', (req, res) => {
       .then(akashmoniData => {
         akashmoniData.title = req.body.title || akashmoniData.title;
         akashmoniData.description= req.body.description || akashmoniData.description;
-        akashmoniData.image = req.file ? req.file.path : akashmoniData.image;
+        akashmoniData.image = req.file ? req.file.filename : akashmoniData.image;
         akashmoniData.save()
           .then(updatedData => res.json({message:"Data Update Successfully",updatedData}))
           .catch(err => res.status(400).json({ error: err.message }));

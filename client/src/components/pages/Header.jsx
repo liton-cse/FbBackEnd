@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 function Header() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary navbar-fixed">
       <Container>
         <Navbar.Brand href="#home">
           <img
@@ -122,7 +122,7 @@ function Header() {
             >
               <NavDropdown.Item
                 as={Link}
-                to="/mehogony"
+                to="/mahogony"
                 className="rounded text-dark hover-menu-item"
               >
                 Mahogony
@@ -136,7 +136,7 @@ function Header() {
               </NavDropdown.Item>
               <NavDropdown.Item
                 as={Link}
-                to="/shishu"
+                to="/shisham-tree"
                 className="rounded text-dark hover-menu-item"
               >
                 Shisham tree
@@ -151,7 +151,7 @@ function Header() {
               </NavDropdown.Item>
               <NavDropdown.Item
                 as={Link}
-                to="/ukelipotas"
+                to="/eucalyptus"
                 className="rounded text-dark hover-menu-item"
               >
                 Eucalyptus

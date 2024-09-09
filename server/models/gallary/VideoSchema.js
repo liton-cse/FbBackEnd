@@ -9,6 +9,7 @@ VideoSchema = new mongoose.Schema({
         required:true
     },
     videoName: String,
+    videoUpd:String,
     videoPath: String,
     uploadedAt: { type: Date, default: Date.now }
 

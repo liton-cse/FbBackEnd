@@ -6,9 +6,15 @@ import About from "./components/pages/About";
 import Activitise from "./components/pages/Activitise";
 import News from "./components/pages/News";
 import Event from "./components/pages/Event";
-
-/*import Image from "./components/gallary/Image";
-import Video from "./components/gallary/Video";*/
+import AkashMoni from "./components/malign-tree/Akash-Moni";
+import Eucalyptus from "./components/malign-tree/Eucalyptus";
+import Mahogony from "./components/malign-tree/Mahogony";
+import ShishamTree from "./components/malign-tree/Shisham-Tree";
+import RainTree from "./components/malign-tree/Rain-Tree";
+import Images from "./components/gallary/Image";
+import Videos from "./components/gallary/Video";
+import Founder from "./components/oranization/Founder";
+import Executive from "./components/oranization/Executive";
 //import ProtectedRoute from "./utils/ProtecredRoute";
 
 function App() {
@@ -21,9 +27,15 @@ function App() {
         <Route exact path="/activitise" element={<Activitise />} />
         <Route exact path="/news" element={<News />} />
         <Route exact path="/events" element={<Event />} />
-        {/*<Route exact path="/image" element={<Image />} />
-          <Route exact path="/video" element={<Video />} />
-          <Route exact path="/" element={<Home />} />*/}
+       <Route exact path="/images-gallery" element={<Images />} />
+        <Route exact path="/videos-gallery" element={<Videos />} />
+        <Route path="akash-moni" element={<AkashMoni/>}/>  
+        <Route path="eucalyptus" element={<Eucalyptus/>}/>  
+        <Route path="Mahogony" element={<Mahogony/>}/>  
+        <Route path="shisham-tree" element={<ShishamTree/>}/>  
+        <Route path="rain-tree" element={<RainTree/>}/>  
+        <Route path="/founder-member" element={<Founder/>}/>  
+        <Route path="/executive-member" element={<Executive/>}/> 
       </Routes>
     </>
   );

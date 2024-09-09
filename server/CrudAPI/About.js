@@ -16,7 +16,7 @@ const AboutModel= createAboutModel(AboutCollection);
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '..//../uploads/About-Image/');
+const uploadDir = path.join(__dirname, '../uploads/about-image/');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -47,7 +47,7 @@ function checkFileType(file, cb) {
     }
   }
 
-  router.use('/uploads/About-Image', express.static(uploadDir));
+  //router.use('/uploads/About-Image', express.static(uploadDir));
 
   // creating a collection in mongodb and store data,,,,,,,,
 
@@ -55,9 +55,9 @@ router.post('/about', upload.single('image'), (req, res) => {
     const newAbout = new AboutModel({
       title: req.body.title,
       description:req.body.description,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename : '',
     });
-    console.log(newAbout.title);
+    
     newAbout.save()
       .then(newAbout=> res.json({mesaage:"Post Save successfully",newAbout})
     )
@@ -87,7 +87,7 @@ router.get('/about', (req, res) => {
       .then(about => {
         about.title = req.body.title || about.title;
         about.description= req.body.description || about.description;
-        about.image = req.file ? req.file.path : about.image;
+        about.image = req.file ? req.file.filename : about.image;
         about.save()
           .then(updatedSlide => res.json({message:"Data Update Successfully",updatedSlide}))
           .catch(err => res.status(400).json({ error: err.message }));

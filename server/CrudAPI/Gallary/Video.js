@@ -10,7 +10,7 @@ const path = require("path");
 router.use(cookiePerser());
 const fs = require('fs');
 
-//Connecting to database.. "Slide-Collection"....
+//Connecting to database.. "Video Collection"....
 const VideoCollection = connectToDatabase('VideoCollection',process.env.MONGODB_URI_GALLARY);
 const VideoModel= createVideoModel(VideoCollection);
 //middleware .......
@@ -39,13 +39,14 @@ function checkFileType(file, cb) {
 }
 
 // Set up a POST route to handle image uploads
-router.post('/videos', upload.array('videos', 10), async (req, res) => {
+router.post('/videos', upload.array('video',10), async (req, res) => {
     const { district, subDistrict } = req.body;
 
     if (!district || !subDistrict) {
         return res.status(400).send('District and Sub-District names are required');
     }
-    const directoryFolder = path.resolve(__dirname,'../../../upload_video');
+    const folderDir = '../../uploadsGallary/videos'
+    const directoryFolder = path.resolve(__dirname,folderDir);
     try {
         // Convert district and subDistrict to lowercase before storing
         const lowerDistrict = district.toLowerCase();
@@ -57,6 +58,7 @@ router.post('/videos', upload.array('videos', 10), async (req, res) => {
                 district: lowerDistrict,
                 subDistrict: lowerSubDistrict,
                 videoName: file.originalname,
+                videoUpd:`${Date.now()}-${file.originalname}`,
                 videoPath: `${directoryFolder}/${lowerDistrict}/${lowerSubDistrict}/${Date.now()}-${file.originalname}`,
             });
 
@@ -85,6 +87,21 @@ router.get('/videos',async(req,res)=>{
         res.status(200).json(posts);
     }catch(err){
         res.status(500).json({error:"Failed to load data"});
+    }
+});
+router.delete('/videos/:id',async(req,res)=>{
+    const id= req.params.id;
+    try{
+        const video=await VideoModel.findByIdAndDelete(id);
+        if (video) {
+            fs.unlinkSync(video.videoPath); 
+            res.status(200).json({ message: 'Image deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Image not found' });
+        }
+
+    }catch(error){
+        res.status(500).json({error:"Failed to delete data"});
     }
 });
 

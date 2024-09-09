@@ -16,7 +16,7 @@ const EucalyptusModel= createEucalyptusModel(Eucalyptus );
 express().use(bodyParser.json());
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '../../../uploads/Eucalyptus');
+const uploadDir = path.resolve(__dirname, '../../uploads/malign-tree/eucalyptus');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -47,7 +47,7 @@ function checkFileType(file, cb) {
     }
   }
 
-  router.use('/upload/eucalyptus', express.static(uploadDir));
+  //router.use('/upload/eucalyptus', express.static(uploadDir));
 
   // creating a collection in mongodb and store data,,,,,,,,
 
@@ -55,7 +55,7 @@ router.post('/eucalyptus', upload.single('image'), (req, res) => {
     const eucalyptusPost = new EucalyptusModel({
       title: req.body.title,
       description:req.body.description,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename : '',
     });
     
     eucalyptusPost.save()
@@ -87,7 +87,7 @@ router.get('/eucalyptus', (req, res) => {
       .then(eucalyptusData => {
         eucalyptusData.title = req.body.title || eucalyptusData.title;
         eucalyptusData.description= req.body.description || eucalyptusData.description;
-        eucalyptusData.image = req.file ? req.file.path : eucalyptusData.image;
+        eucalyptusData.image = req.file ? req.file.filename : eucalyptusData.image;
         eucalyptusData.save()
           .then(updatedData => res.json({message:"Data Update Successfully",updatedData}))
           .catch(err => res.status(400).json({ error: err.message }));

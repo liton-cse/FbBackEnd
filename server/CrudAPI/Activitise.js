@@ -17,7 +17,7 @@ express().use(bodyParser.json());
 
 
 // Set up Multer for file uploads
-const uploadDir = path.resolve(__dirname, '..//../uploads/activitiseImage/');
+const uploadDir = path.join(__dirname, '../uploads/activitise-image');
 const storage = multer.diskStorage({
     destination: uploadDir,
     filename: function (req, file, cb) {
@@ -48,7 +48,7 @@ function checkFileType(file, cb) {
   }
 }
 
-router.use('/uploads/activitiseImage', express.static(uploadDir));
+//router.use('/uploads/activitiseImage', express.static(uploadDir));
 
 
 // creating a collection in mongodb and store data,,,,,,,,
@@ -56,7 +56,7 @@ router.use('/uploads/activitiseImage', express.static(uploadDir));
 router.post('/activitise', upload.single('image'), (req, res) => {
     const newActivise = new ActiviseModel({
       title: req.body.title,
-      image: req.file ? req.file.path : '',
+      image: req.file ? req.file.filename : '',
       author: req.body.author,
       description: req.body.description
     });
@@ -90,7 +90,7 @@ router.get('/activitise', (req, res) => {
     ActiviseModel.findById(req.params.id)
       .then(post => {
         post.title = req.body.title || post.title;
-        post.image = req.file ? req.file.path : post.image;
+        post.image = req.file ? req.file.filename : post.image;
         post.author = req.body.author || post.author;
         post.description = req.body.description || post.description;
   

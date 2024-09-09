@@ -9,7 +9,9 @@ ImageSchema = new mongoose.Schema({
         required:true
     },
     imageName: String,
+    imageUpd:String,
     imagePath: String,
+    
     uploadedAt: { type: Date, default: Date.now }
 
 });

@@ -12,6 +12,7 @@
   "proxy": "`http://localhost:${process.env.PORT}`",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.7.5",
     "bootstrap": "^5.3.3",
     "create-vite": "^5.5.2",
     "dotenv": "^16.4.5",
